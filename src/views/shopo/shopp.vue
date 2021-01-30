@@ -30,7 +30,13 @@
       <el-table-column label="状态" width="180">
         <template slot-scope="scope">
           {{ scope.row.status == 2 ? "已下架" : "在售" }}
-          <button>{{ scope.row.status == 1 ? "下架" : "上架" }}</button>
+          <el-button
+            type="warning"
+            round
+            size="mini"
+            @click="open(scope.row.status, scope.row.id)"
+            >{{ scope.row.status == 1 ? "下架" : "上架" }}</el-button
+          >
         </template>
       </el-table-column>
       <el-table-column prop="" label="操作">
@@ -87,6 +93,59 @@ export default {
         this.total = res.data.data.total;
       });
     },
+    open(productId,status) {
+      if (productId == 2) {
+        this.$confirm("确认要上架该商品？", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+          .then(() => {
+            this.putaway(productId,status)
+            this.$message({
+              type: "success",
+              message: "上架成功!",
+            });
+            this.getshop()
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消上架",
+            });
+          });
+      } else {
+        this.$confirm("确认要下架该商品？", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+          .then(() => {
+             this.putaway(productId,status)
+            this.$message({
+              type: "success",
+              message: "下架成功!",
+            });
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消下架",
+            });
+          });
+      }
+    },
+    putaway(productId, status) {
+      this.$netClient.PUTAWAY(productId, status).then(() => {
+        this.getshop()
+      });
+    },
+    getshop() {
+      this.$netClient.SHOPP().then((res) => {
+        this.list = res.data.data.list;
+        this.total = res.data.data.total;
+      });
+    },
   },
   data() {
     return {
@@ -101,11 +160,7 @@ export default {
     };
   },
   mounted() {
-    this.$netClient.SHOPP().then((res) => {
-      console.log(res);
-      this.list = res.data.data.list;
-      this.total = res.data.data.total;
-    });
+    this.getshop();
   },
 };
 </script>

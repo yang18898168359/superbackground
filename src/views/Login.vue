@@ -7,6 +7,7 @@
       label-width="100px"
       class="demo-ruleForm"
     >
+    <h2>请登录</h2>
       <el-form-item prop="name" style="margin-left: -100px">
         <el-input v-model="ruleForm.name"></el-input>
       </el-form-item>

@@ -14,7 +14,7 @@ export const PATH = {
 
   // 商品管理：
   SHOPP: '/manage/product/list.do',
-
+  
   // 查询
   SEARCH: '/manage/product/search.do',
 
